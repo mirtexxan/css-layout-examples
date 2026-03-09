@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Progressione dei layout CSS</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-2: #1f2937;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --line: #334155;
+      --accent: #38bdf8;
+      --accent-2: #a78bfa;
+      --ok: #22c55e;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+      --header: #0ea5e9;
+      --nav: #8b5cf6;
+      --main: #10b981;
+      --aside: #f59e0b;
+      --footer: #f43f5e;
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0,0,0,0.25);
+      --container-width: 980px;
+      --gap: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(56,189,248,0.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(167,139,250,0.10), transparent 24%),
+        linear-gradient(180deg, #0b1120 0%, #0f172a 100%);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .page {
+      width: min(1100px, calc(100% - 32px));
+      margin: 32px auto 60px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(56,189,248,0.10), rgba(167,139,250,0.10));
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px 0;
+      font-size: 2rem;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 900px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+    }
+
+    .step {
+      background: rgba(17,24,39,0.78);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      margin-bottom: 28px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .step-title-wrap h2 {
+      margin: 0 0 6px 0;
+      font-size: 1.35rem;
+    }
+
+    .step-title-wrap p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .effort {
+      align-self: start;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .effort.low { color: var(--ok); }
+    .effort.mid { color: var(--warn); }
+    .effort.high { color: var(--bad); }
+
+    .notes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 14px 0 18px;
+    }
+
+    .note-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .note-box strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .demo-shell {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      overflow: hidden;
+      background: #0b1220;
+    }
+
+    .demo-topbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #111827;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #334155;
+    }
+
+    .dot:nth-child(1) { background: #ef4444; }
+    .dot:nth-child(2) { background: #f59e0b; }
+    .dot:nth-child(3) { background: #22c55e; }
+
+    .demo-area {
+      padding: 18px;
+    }
+
+    /* blocchi demo comuni */
+    .box {
+      border-radius: 16px;
+      padding: 18px;
+      min-height: 90px;
+      border: 1px solid rgba(255,255,255,0.10);
+      color: white;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .header-box { background: linear-gradient(135deg, var(--header), #0284c7); }
+    .nav-box    { background: linear-gradient(135deg, var(--nav), #7c3aed); min-height: 70px; }
+    .main-box   { background: linear-gradient(135deg, var(--main), #059669); min-height: 240px; }
+    .aside-box  { background: linear-gradient(135deg, var(--aside), #d97706); min-height: 240px; }
+    .footer-box { background: linear-gradient(135deg, var(--footer), #e11d48); min-height: 80px; }
+
+    .mini-content {
+      margin-top: 12px;
+      font-size: 0.92rem;
+      font-weight: normal;
+      color: rgba(255,255,255,0.92);
+    }
+
+    /* STEP 1: BLOCK */
+    .layout-block .header-box,
+    .layout-block .nav-box,
+    .layout-block .main-box,
+    .layout-block .aside-box,
+    .layout-block .footer-box {
+      margin-bottom: 12px;
+    }
+
+    /* STEP 2: FLOAT */
+    .layout-float .content {
+      margin-top: 12px;
+    }
+
+    .layout-float .main-box {
+      float: left;
+      width: 68%;
+      margin-bottom: 12px;
+    }
+
+    .layout-float .aside-box {
+      float: right;
+      width: 28%;
+      margin-bottom: 12px;
+    }
+
+    .layout-float .footer-box {
+      clear: both;
+    }
+
+    /* STEP 3: INLINE-BLOCK */
+    .layout-inline {
+      font-size: 0; /* hack per togliere gli spazi tra inline-block */
+    }
+
+    .layout-inline .header-box,
+    .layout-inline .nav-box,
+    .layout-inline .footer-box {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .layout-inline .main-box,
+    .layout-inline .aside-box {
+      display: inline-block;
+      vertical-align: top;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .layout-inline .main-box {
+      width: 68%;
+      margin-right: 4%;
+    }
+
+    .layout-inline .aside-box {
+      width: 28%;
+    }
+
+    /* STEP 4: FLEX */
+    .layout-flex .content {
+      display: flex;
+      gap: var(--gap);
+      margin: 12px 0;
+    }
+
+    .layout-flex .main-box {
+      flex: 3;
+    }
+
+    .layout-flex .aside-box {
+      flex: 1;
+    }
+
+    /* STEP 5: GRID */
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr;
+      grid-template-areas:
+        "header header"
+        "nav nav"
+        "main aside"
+        "footer footer";
+      gap: var(--gap);
+    }
+
+    .layout-grid .header-box { grid-area: header; }
+    .layout-grid .nav-box    { grid-area: nav; }
+    .layout-grid .main-box   { grid-area: main; }
+    .layout-grid .aside-box  { grid-area: aside; }
+    .layout-grid .footer-box { grid-area: footer; }
+
+    /* extra estetica per step moderni */
+    .layout-flex .nav-box .menu,
+    .layout-grid .nav-box .menu {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .layout-flex .nav-box .menu span,
+    .layout-grid .nav-box .menu span {
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      font-weight: normal;
+    }
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 12px;
+      padding: 12px;
+      min-width: 110px;
+      flex: 1 1 110px;
+      font-size: 0.86rem;
+      font-weight: normal;
+    }
+
+    .footer {
+      color: var(--muted);
+      text-align: center;
+      margin-top: 16px;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 780px) {
+      .layout-float .main-box,
+      .layout-float .aside-box,
+      .layout-inline .main-box,
+      .layout-inline .aside-box {
+        float: none;
+        display: block;
+        width: 100%;
+        margin-right: 0;
+      }
+
+      .layout-flex .content {
+        flex-direction: column;
+      }
+
+      .layout-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "header"
+          "nav"
+          "main"
+          "aside"
+          "footer";
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <h1>Progressione dei layout CSS: dal paleolitico al civile</h1>
+      <p>
+        Stesso obiettivo logico di layout: <strong>header, nav, main, sidebar, footer</strong>.
+        Cambia il metodo. L’idea è farti vedere non solo <em>come</em> funziona ogni tecnica,
+        ma soprattutto <em>quanto rompe</em> quando il layout cresce.
+      </p>
+      <div class="legend">
+        <span class="pill">Step 1: block</span>
+        <span class="pill">Step 2: float</span>
+        <span class="pill">Step 3: inline-block</span>
+        <span class="pill">Step 4: flexbox</span>
+        <span class="pill">Step 5: grid</span>
+      </div>
+    </section>
+
+    <!-- STEP 1 -->
+    <section class="step">
+      <div class="step-header">
+        <div class="step-title-wrap">
+          <h2>Step 1 — Block normale</h2>
+          <p>È il comportamento di default degli elementi block: tutto in colonna, tutto a capo.</p>
+        </div>
+        <div class="effort low">Sbatti: basso, ma inutilità alta</div>
+      </div>
+
+      <div class="notes">
+        <div class="note-box">
+          <strong>Vantaggio</strong>
+          Semplicissimo da capire.
+        </div>
+        <div class="note-box">
+          <strong>Svantaggio</strong>
+          Non ottieni un vero layout a colonne.
+        </div>
+        <div class="note-box">
+          <strong>Quando ha senso</strong>
+          Solo per pagine molto elementari o contenuto puramente verticale.
+        </div>
+      </div>
+
+      <div class="demo-shell">
+        <div class="demo-topbar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+        <div class="demo-area layout-block">
+          <div class="box header-box">HEADER</div>
+          <div class="box nav-box">NAV</div>
+          <div class="box main-box">
+            MAIN
+            <div class="mini-content">Va sotto perché è block.</div>
+          </div>
+          <div class="box aside-box">
+            SIDEBAR
+            <div class="mini-content">Anche lei sotto. Fine del sogno.</div>
+          </div>
+          <div class="box footer-box">FOOTER</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="step">
+      <div class="step-header">
+        <div class="step-title-wrap">
+          <h2>Step 2 — Float</h2>
+          <p>Metodo storico. Non nasce per fare layout completi, ma per anni si è usato anche per quello.</p>
+        </div>
+        <div class="effort mid">Sbatti: medio</div>
+      </div>
+
+      <div class="notes">
+        <div class="note-box">
+          <strong>Vantaggio</strong>
+          Finalmente ottieni main e sidebar affiancati.
+        </div>
+        <div class="note-box">
+          <strong>Svantaggio</strong>
+          Devi ragionare con <code>float</code> e <code>clear</code>. È fragile.
+        </div>
+        <div class="note-box">
+          <strong>Sensazione tipica</strong>
+          “Perché il footer si incastra male?”.
+        </div>
+      </div>
+
+      <div class="demo-shell">
+        <div class="demo-topbar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+        <div class="demo-area layout-float">
+          <div class="box header-box">HEADER</div>
+          <div class="box nav-box">NAV</div>
+          <div class="content">
+            <div class="box main-box">
+              MAIN
+              <div class="mini-content">Con <code>float: left</code> e larghezza manuale.</div>
+            </div>
+            <div class="box aside-box">
+              SIDEBAR
+              <div class="mini-content">Con <code>float: right</code>.</div>
+            </div>
+          </div>
+          <div class="box footer-box">
+            FOOTER
+            <div class="mini-content">Qui serve <code>clear: both</code>.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="step">
+      <div class="step-header">
+        <div class="step-title-wrap">
+          <h2>Step 3 — Inline-block</h2>
+          <p>Più leggibile dei float, ma pieno di piccoli fastidi, soprattutto gli spazi invisibili.</p>
+        </div>
+        <div class="effort mid">Sbatti: medio-alto</div>
+      </div>
+
+      <div class="notes">
+        <div class="note-box">
+          <strong>Vantaggio</strong>
+          Gli elementi stanno affiancati senza float.
+        </div>
+        <div class="note-box">
+          <strong>Svantaggio</strong>
+          Compare il problema degli spazi tra elementi inline-block.
+        </div>
+        <div class="note-box">
+          <strong>Hack classico</strong>
+          <code>font-size: 0</code> sul contenitore, poi lo rimetti ai figli.
+        </div>
+      </div>
+
+      <div class="demo-shell">
+        <div class="demo-topbar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+        <div class="demo-area layout-inline">
+          <div class="box header-box">HEADER</div>
+          <div class="box nav-box">NAV</div>
+          <div class="box main-box">
+            MAIN
+            <div class="mini-content">Con <code>display: inline-block</code>.</div>
+          </div>
+          <div class="box aside-box">
+            SIDEBAR
+            <div class="mini-content">Serve attenzione alle larghezze e agli spazi.</div>
+          </div>
+          <div class="box footer-box">FOOTER</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <section class="step">
+      <div class="step-header">
+        <div class="step-title-wrap">
+          <h2>Step 4 — Flexbox</h2>
+          <p>Qui si comincia a respirare. Perfetto per distribuire elementi lungo una riga o una colonna.</p>
+        </div>
+        <div class="effort low">Sbatti: basso</div>
+      </div>
+
+      <div class="notes">
+        <div class="note-box">
+          <strong>Vantaggio</strong>
+          Allineare e distribuire diventa molto più semplice.
+        </div>
+        <div class="note-box">
+          <strong>Svantaggio</strong>
+          Ottimo per layout 1D, meno naturale per la struttura completa di pagina.
+        </div>
+        <div class="note-box">
+          <strong>Dove brilla</strong>
+          Navbar, card, toolbar, sezioni affiancate.
+        </div>
+      </div>
+
+      <div class="demo-shell">
+        <div class="demo-topbar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+        <div class="demo-area layout-flex">
+          <div class="box header-box">HEADER</div>
+
+          <div class="box nav-box">
+            NAV
+            <div class="menu">
+              <span>Home</span>
+              <span>Corsi</span>
+              <span>Progetti</span>
+              <span>Contatti</span>
+            </div>
+          </div>
+
+          <div class="content">
+            <div class="box main-box">
+              MAIN
+              <div class="cards">
+                <div class="card">Card 1</div>
+                <div class="card">Card 2</div>
+                <div class="card">Card 3</div>
+              </div>
+            </div>
+
+            <div class="box aside-box">
+              SIDEBAR
+              <div class="mini-content">Più piccola grazie a <code>flex</code>.</div>
+            </div>
+          </div>
+
+          <div class="box footer-box">FOOTER</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 5 -->
+    <section class="step">
+      <div class="step-header">
+        <div class="step-title-wrap">
+          <h2>Step 5 — Grid</h2>
+          <p>Il metodo più chiaro per il layout macro della pagina: righe e colonne insieme.</p>
+        </div>
+        <div class="effort low">Sbatti: basso dopo aver capito la logica</div>
+      </div>
+
+      <div class="notes">
+        <div class="note-box">
+          <strong>Vantaggio</strong>
+          Il layout è quasi disegnato nel CSS.
+        </div>
+        <div class="note-box">
+          <strong>Svantaggio</strong>
+          All’inizio va capita bene la logica di aree, righe e colonne.
+        </div>
+        <div class="note-box">
+          <strong>Uso moderno</strong>
+          Grid per la struttura della pagina, Flex per i dettagli interni.
+        </div>
+      </div>
+
+      <div class="demo-shell">
+        <div class="demo-topbar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+        <div class="demo-area layout-grid">
+          <div class="box header-box">HEADER</div>
+
+          <div class="box nav-box">
+            NAV
+            <div class="menu">
+              <span>Home</span>
+              <span>Articoli</span>
+              <span>Didattica</span>
+              <span>About</span>
+            </div>
+          </div>
+
+          <div class="box main-box">
+            MAIN
+            <div class="cards">
+              <div class="card">Contenuto A</div>
+              <div class="card">Contenuto B</div>
+              <div class="card">Contenuto C</div>
+              <div class="card">Contenuto D</div>
+            </div>
+          </div>
+
+          <div class="box aside-box">
+            SIDEBAR
+            <div class="mini-content">
+              Posizionata tramite aree di griglia, non con trucchetti.
+            </div>
+          </div>
+
+          <div class="box footer-box">FOOTER</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      Regola pratica moderna: <strong>Grid per il layout della pagina</strong>, <strong>Flexbox per i componenti interni</strong>.
+    </div>
+  </div>
+</body>
+</html>
